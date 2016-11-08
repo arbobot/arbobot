@@ -7,10 +7,10 @@ format = "%Y-%m-%d %H:%M:%S %Z%z"
 
 
 # Given a timezone (eg "America/Los_Angeles") it gives you back the converted UTC time
-def toUTC(my_time, str_timezone):
+def toUTC(dt, tz):
     # Convert to new time zone
-    local_tz = timezone (str_timezone)
-    local_dt = local_tz.localize(my_time, is_dst=None).astimezone(pytz.utc)
+    local_tz = timezone (tz)
+    local_dt = local_tz.localize(dt, is_dst=None).astimezone(pytz.utc)
     #print "Old time: " + my_time.strftime(format)
     #print "New time: " + local_dt.strftime(format)
     return local_dt

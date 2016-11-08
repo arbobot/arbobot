@@ -1,42 +1,31 @@
 name: introduction
 states:
+  get_location:
+      component: meya.input_location
+      properties:
+        text: "Where are you (So I can workout what timezone your in)?"
+        output: location
+  set_wake_up:
+      component: meya.input_datetime
+      properties:
+          text: "What time are you planning to wake up tomorrow? I’ll send you a reminder :)"
+          output: wakeup_time
+          scope: user
   tell_loc:
       component: meya.text
       properties:
-          text: "Hey this is just a test bot"
-    # set_wake_up:
-    #     component: meya.input_datetime
-    #     properties:
-    #         text: "What time are you planning to wake up tomorrow? I’ll send you a reminder :)"
-    #         output: wakeup_time
-    #         scope: user
-    # check_timezone_exists:
-    #     component: check_timezone_exists
-    #     transitions:
-    #         has_timezone: set_alarm
-    #         no_time zone: get_location
-    # get_location:
-    #     component: meya.input_location
-    #     properties:
-    #       text: "Where are you (So I can workout what timezone your in)?"
-    #       output: location
-    # tell_loc:
-    #     component: meya.text
-    #     properties:
-    #         text: "Oh nice. My fav Oprah episode was when she visited {{ user.city }}"
-    # set_timezone_from_loc:
-    #     component: get_timezone_from_location
-    # set_alarm:
-    #     component: calculate_alarm
-    # tell_set_alarm:
-    #     component: meya.text
-    #     properties:
-    #         text: "I've set the alarm for {{ flow.alarm_time_output }} tomorrow. Chat then!"
-    # schedule_alarm:
-    #     component: meya.pass
-    #     delay:
-    #         absolute: "{{ flow.alarm_time }}"
-    # next_todo:
-    #     component: meya.text
-    #     properties:
-    #         text: "Wakey Wakey! You told me to set alarm to this time ({{ flow.alarm_time_output }})"
+          text: "Oh nice. How goods {{ user.city }}!"
+  set_alarm:
+      component: calculate_alarm
+  tell_set_alarm:
+      component: meya.text
+      properties:
+          text: "I've set the alarm for {{ flow.alarm_time_output }} tomorrow. Chat then!"
+  schedule_alarm:
+      component: meya.pass
+      delay:
+          absolute: "{{ flow.alarm_time }}"
+  next_todo:
+      component: meya.text
+      properties:
+          text: "Wakey Wakey! You told me to set alarm to this time ({{ flow.alarm_time_output }})"
