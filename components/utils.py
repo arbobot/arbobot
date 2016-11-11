@@ -3,18 +3,30 @@ from pytz import timezone
 import arrow
 import pytz
 
-format = "%Y-%m-%d %H:%M:%S %Z%z"
+format = "%Y-%m-%d %H:%M %Z%z"
+
+def getScheduleDelay(hour_loc, min_loc, user_tz):
+    # set alarm time with hour and minute picked
+    now_loc = datetime.now(tz=pytz.timezone(user_tz)) #11 Nov 2016 22:14
+    alarm_time_loc = timezone(user_tz).localize(datetime(now_loc.year, now_loc.month, now_loc.day, hour_loc, min_loc)) #11 Nov 2016 7:10
+    print "Users time: " + now_loc.strftime(format)
+    print "Users wake up time: " + alarm_time_loc.strftime(format)
+
+    # check if alarm already happened "today"
+    if alarm_time_loc < now_loc:
+        alarm_time_loc = alarm_time_loc + timedelta(days=1) #12 Nov 2016 7:10
+
+    delta_in_secs = getDifferenceInSecs(alarm_time_loc, now_loc)
+    return getUTCTimeFromNow(delta_in_secs)
 
 
-# Given a timezone (eg "America/Los_Angeles") it gives you back the converted UTC time
-def toUTC(dt, tz):
-    # Convert to new time zone
-    local_tz = timezone (tz)
-    local_dt = local_tz.localize(dt, is_dst=None).astimezone(pytz.utc)
-    #print "Old time: " + my_time.strftime(format)
-    #print "New time: " + local_dt.strftime(format)
-    return local_dt
-def makeDateFuture(my_time):
-        # check if alarm already happened "today"
-        if pytz.utc.localize(my_time) < arrow.utcnow():
-            my_time = my_time.replace(days=+1)
+def getDifferenceInSecs(date1, date2):
+    #get difference between two dates
+    delta_in_secs =  (date1 - date2).total_seconds()
+    print "User notification in: " + str(delta_in_secs/3600) + "hrs"
+    return delta_in_secs
+
+
+def getUTCTimeFromNow(seconds_delay):
+    # convert user time to utc servertime
+    return timezone('UTC').localize(datetime.utcnow()) + timedelta(seconds=seconds_delay)

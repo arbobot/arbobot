@@ -11,21 +11,24 @@ states:
           text: "What time are you planning to wake up tomorrow? I’ll send you a reminder :)"
           output: wakeup_time
           scope: user
+          timezone: UTC
   tell_loc:
       component: meya.text
       properties:
           text: "Oh nice. How goods {{ user.city }}!"
   set_alarm:
-      component: calculate_alarm
+      component: set_wakeup_time
   tell_set_alarm:
       component: meya.text
       properties:
-          text: "I've set the alarm for {{ flow.alarm_time_output }} tomorrow. Chat then!"
+          text: "I've set the alarm for {{ flow.wakeup_time }} tomorrow. Chat then!"
   schedule_alarm:
       component: meya.pass
       delay:
-          absolute: "{{ flow.alarm_time }}"
+          absolute: "{{ flow.schedule_delay_utc }}"
   next_todo:
       component: meya.text
       properties:
-          text: "Wakey Wakey! You told me to set alarm to this time ({{ flow.alarm_time_output }})"
+          text: "Wakey Wakey! You told me to set alarm to this time ({{ flow.wakeup_time }})"
+  #  end_of_section:
+  #      flow: _happiness_day_1_stage_1
